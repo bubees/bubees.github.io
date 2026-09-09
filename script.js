@@ -153,7 +153,7 @@ function makeStatus(text) {
 // 3. File > Share > Publish to web > select the sheet > CSV, then paste that URL below.
 // If this fetch fails or the sheet is empty, the events already written into
 // index.html are left alone, so the section never looks broken.
-const EVENTS_SHEET_CSV_URL = '[PLACEHOLDER: Published Events Google Sheet CSV URL]';
+const EVENTS_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS26SNVhK9y9AOalc-BBwlz4OQtQzv4Ju45_EgxC7X_8nU6KFE9kHBN8X9TWBjWgqqJo8bzXsBgUAco/pub?output=csv';
 
 function loadEventsGrid() {
   const grid = document.getElementById('eventsGrid');
