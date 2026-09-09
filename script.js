@@ -147,4 +147,68 @@ function makeStatus(text) {
   return p;
 }
 
+// Upcoming Events grid
+// 1. Create a plain Google Sheet (not a Form) with columns: Date, Title, Description.
+// 2. Fill in one row per event (Description can be left blank).
+// 3. File > Share > Publish to web > select the sheet > CSV, then paste that URL below.
+// If this fetch fails or the sheet is empty, the events already written into
+// index.html are left alone, so the section never looks broken.
+const EVENTS_SHEET_CSV_URL = '[PLACEHOLDER: Published Events Google Sheet CSV URL]';
+
+function loadEventsGrid() {
+  const grid = document.getElementById('eventsGrid');
+  if (!grid || EVENTS_SHEET_CSV_URL.startsWith('[PLACEHOLDER')) return;
+
+  fetch(EVENTS_SHEET_CSV_URL)
+    .then((res) => res.text())
+    .then((text) => {
+      const rows = parseCsv(text);
+      if (rows.length < 2) return;
+
+      const headers = rows[0].map((h) => h.trim().toLowerCase());
+      const dateCol = headers.findIndex((h) => h.includes('date'));
+      const titleCol = headers.findIndex((h) => h.includes('title'));
+      const descCol = headers.findIndex((h) => h.includes('desc'));
+
+      const events = rows.slice(1)
+        .map((r) => ({
+          date: dateCol > -1 ? (r[dateCol] || '').trim() : '',
+          title: titleCol > -1 ? (r[titleCol] || '').trim() : '',
+          description: descCol > -1 ? (r[descCol] || '').trim() : '',
+        }))
+        .filter((ev) => ev.title.length > 0);
+
+      if (events.length === 0) return;
+
+      grid.innerHTML = '';
+      events.forEach((ev) => {
+        const card = document.createElement('div');
+        card.className = 'card event-card';
+
+        if (ev.date) {
+          const dateSpan = document.createElement('span');
+          dateSpan.className = 'event-date';
+          dateSpan.textContent = ev.date;
+          card.appendChild(dateSpan);
+        }
+
+        const h3 = document.createElement('h3');
+        h3.textContent = ev.title;
+        card.appendChild(h3);
+
+        if (ev.description) {
+          const p = document.createElement('p');
+          p.textContent = ev.description;
+          card.appendChild(p);
+        }
+
+        grid.appendChild(card);
+      });
+    })
+    .catch(() => {
+      // Leave the existing static event cards in place on failure.
+    });
+}
+
 loadBeeGallery();
+loadEventsGrid();
