@@ -101,7 +101,10 @@ function loadBeeGallery() {
       }
 
       const headers = rows[0].map((h) => h.trim().toLowerCase());
-      let nameCol = headers.findIndex((h) => h.includes('name'));
+      // Look for the bee-name column specifically, so an added "Venmo
+      // username" column (which also contains "name") isn't picked instead.
+      let nameCol = headers.findIndex((h) => h.includes('bee') && h.includes('name'));
+      if (nameCol === -1) nameCol = headers.findIndex((h) => h.includes('name') && !h.includes('venmo') && !h.includes('username'));
       if (nameCol === -1) nameCol = headers.length > 1 ? 1 : 0;
 
       const names = rows.slice(1)
