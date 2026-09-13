@@ -25,11 +25,11 @@ contactForm.addEventListener('submit', (e) => {
 
   const subject = `Message from ${name} via BU Beekeeping Club website`;
   const body = `${message}\n\nFrom ${name} (${email})`;
-  const mailtoUrl = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(CONTACT_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-  window.location.href = mailtoUrl;
+  window.open(gmailUrl, '_blank');
 
-  formNote.textContent = "Thanks for reaching out! We're buzzing to hear from you. This opened your email app so you can send us your message.";
+  formNote.textContent = "Thanks for reaching out! We're buzzing to hear from you. This opened a Gmail draft in a new tab, just hit send.";
   contactForm.reset();
 });
 
